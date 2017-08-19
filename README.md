@@ -16,6 +16,7 @@
 - zookeeper
 - kafka
 - zipkin
+- splunk
 
 ## Build and running the containers (including the dependencies listed above)
 `./run_containers.sh`
@@ -23,8 +24,14 @@
 ## Trigger the services
 `curl http://localhost:8082`
 
-## Check Zipkin and query by trace id
+## Zipkin URL and query by trace id
 `http://localhost:9411/`
+
+## Splunk
+### URL
+`http://localhost:8000/`
+### HTTP Listener
+Added ENV variable to enable the TCP port 9997 in order to receive logs. See docker-compose file for more information.
 
 ## Zipkin screenshots
 ### Tracing a flow

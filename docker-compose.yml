@@ -12,6 +12,7 @@ services:
       - kafka
       - zookeeper
       - zipkin
+      - splunk
   service-2:
     container_name: service-2
     build:
@@ -24,6 +25,7 @@ services:
       - kafka
       - zookeeper
       - zipkin
+      - splunk
       - service-3
   service-3:
     container_name: service-3
@@ -35,6 +37,7 @@ services:
       - /tmp:/target/logs
     links:
       - zipkin
+      - splunk
   zookeeper:
     container_name: zookeeper
     image: confluentinc/cp-zookeeper:3.1.2-2
@@ -57,6 +60,16 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
   zipkin:
     container_name: zipkin
-    image: openzipkin/zipkin
+    image: openzipkin/zipkin:1.30.3
     ports:
       - "9411:9411"
+  splunk:
+    container_name: splunk
+    image: splunk/splunk:6.6.1
+    ports:
+      - "8000:8000"
+      - "9997:9997"
+    environment:
+      SPLUNK_START_ARGS: --accept-license --answer-yes
+      SPLUNK_ADD: tcp 9997
+      SPLUNK_USER: root
