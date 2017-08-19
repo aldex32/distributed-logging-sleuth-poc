@@ -1,0 +1,62 @@
+version: '2'
+services:
+  service-1:
+    container_name: service-1
+    build:
+      context: ./service-1/
+    ports:
+      - "8082:8082"
+    volumes:
+      - /tmp:/target/logs
+    links:
+      - kafka
+      - zookeeper
+      - zipkin
+  service-2:
+    container_name: service-2
+    build:
+      context: ./service-2/
+    ports:
+      - "8083:8083"
+    volumes:
+      - /tmp:/target/logs
+    links:
+      - kafka
+      - zookeeper
+      - zipkin
+      - service-3
+  service-3:
+    container_name: service-3
+    build:
+      context: ./service-3/
+    ports:
+      - "8084:8084"
+    volumes:
+      - /tmp:/target/logs
+    links:
+      - zipkin
+  zookeeper:
+    container_name: zookeeper
+    image: confluentinc/cp-zookeeper:3.1.2-2
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+  kafka:
+    container_name: kafka
+    image: confluentinc/cp-kafka:3.1.2-2
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "1099:1099"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"

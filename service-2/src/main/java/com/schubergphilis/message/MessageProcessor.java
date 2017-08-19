@@ -3,6 +3,7 @@ package com.schubergphilis.message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.integration.annotation.MessageEndpoint;
@@ -16,6 +17,9 @@ public class MessageProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageProcessor.class);
 
+    @Value("${service3.url:http://localhost:8084}")
+    private String service3Url;
+
     @Autowired
     private RestTemplate restTemplate;
 
@@ -28,7 +32,7 @@ public class MessageProcessor {
         LOGGER.info("Headers received from topic1: {}", msg.getHeaders());
 
         LOGGER.info("Invoking service-3");
-        final String response = restTemplate.getForObject("http://localhost:8084", String.class);
+        final String response = restTemplate.getForObject(service3Url, String.class);
 
         LOGGER.info("Response from service-3: {}", response);
 
