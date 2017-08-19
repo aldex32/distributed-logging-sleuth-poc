@@ -1,2 +1,5 @@
 .idea
 *.iml
+service-1/target
+service-2/target
+service-3/target
