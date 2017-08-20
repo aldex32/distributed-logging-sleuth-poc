@@ -24,7 +24,7 @@ public class Service1Controller {
 
         Message<String> message = MessageBuilder.withPayload("message1").build();
 
-        LOGGER.info("Sending message '{}' to topic1");
+        LOGGER.info("Sending message '{}' to topic1", message);
 
         source.output().send(message);
 

@@ -8,6 +8,8 @@
 5. `Service2` will push a message to `topic2`
 6. `Service1` will consume the message from `topic2`
 
+![alt text](images/microservices_flow.png "Microservices Flow")
+
 ## Prerequisites
 - Java 8
 - Docker
@@ -18,11 +20,17 @@
 - zipkin
 - splunk
 
-## Build and running the containers (including the dependencies listed above)
+## Build microservices and running containers
 `./run_containers.sh`
 
+## Kill all containers
+`./kill_all_containers.sh`
+
 ## Trigger the services
+### Sleuth will generate the trace id
 `curl http://localhost:8082`
+### Use your own traced id by setting the right header (should be a hex value)
+`curl --header "X-B3-TraceId: 616c646f313233" http://localhost:8082`
 
 ## Zipkin URL and query by trace id
 `http://localhost:9411/`
