@@ -8,7 +8,6 @@ import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.context.annotation.Bean;
 import org.springframework.integration.annotation.IntegrationComponentScan;
-import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableBinding({Sink.class, Source.class})
@@ -24,8 +23,4 @@ public class Service2Configuration {
         return info -> true;
     }
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
 }

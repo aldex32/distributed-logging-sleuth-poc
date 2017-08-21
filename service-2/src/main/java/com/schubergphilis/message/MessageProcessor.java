@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.cloud.stream.messaging.Source;
+import org.springframework.http.ResponseEntity;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
+import org.springframework.web.client.AsyncRestTemplate;
 
 @MessageEndpoint
 public class MessageProcessor {
@@ -21,24 +24,42 @@ public class MessageProcessor {
     private String service3Url;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private Source source;
 
     @Autowired
-    private Source source;
+    private AsyncRestTemplate asyncRestTemplate;
 
     @ServiceActivator(inputChannel = Sink.INPUT)
     public void onMessage(Message<String> msg) {
         LOGGER.info("Message received from topic1: {}", msg.getPayload());
         LOGGER.info("Headers received from topic1: {}", msg.getHeaders());
 
-        LOGGER.info("Invoking service-3");
-        final String response = restTemplate.getForObject(service3Url, String.class);
+        LOGGER.info("Invoking service-3 in parallel for 3 times");
+        for (int i = 0; i < 3; i++) {
+            final ListenableFuture<ResponseEntity<String>> futureResponse = asyncRestTemplate.getForEntity(service3Url, String.class);
 
-        LOGGER.info("Response from service-3: {}", response);
+            futureResponse.addCallback(new ListenableFutureCallback<ResponseEntity<String>>() {
 
-        LOGGER.info("Sending message to topic2: {}", response);
+                @Override
+                public void onSuccess(ResponseEntity<String> result) {
+                    final String body = result.getBody();
+                    LOGGER.info("Response from service-3: {}", body);
 
-        Message<String> message = MessageBuilder.withPayload(response).build();
-        source.output().send(message);
+                    sendMessage(body);
+                }
+
+                @Override
+                public void onFailure(Throwable ex) {
+
+                }
+            });
+        }
+    }
+
+    private void sendMessage(String message) {
+        LOGGER.info("Sending message to topic2: {}", message);
+
+        Message<String> payload = MessageBuilder.withPayload(message).build();
+        source.output().send(payload);
     }
 }
