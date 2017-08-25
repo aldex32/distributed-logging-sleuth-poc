@@ -1,0 +1,9 @@
+spring:
+  zipkin:
+    base-url: http://zipkin:9411 # Property needed only if it is running in docker
+
+cxf:
+  path: /
+
+server:
+  port: 8085
