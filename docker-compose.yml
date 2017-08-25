@@ -32,6 +32,15 @@ services:
     links:
       - zipkin
       - splunk
+  service-4:
+    container_name: service-4
+    build:
+      context: ./service-4/
+    ports:
+      - "8085:8085"
+    links:
+      - zipkin
+      - splunk
   zookeeper:
     container_name: zookeeper
     image: confluentinc/cp-zookeeper:3.1.2-2

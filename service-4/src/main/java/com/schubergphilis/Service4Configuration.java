@@ -7,6 +7,7 @@ import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.sleuth.Sampler;
 import org.springframework.context.annotation.Bean;
 
 import java.util.Arrays;
@@ -16,6 +17,11 @@ public class Service4Configuration {
 
     public static void main(String[] args) {
         SpringApplication.run(Service4Configuration.class, args);
+    }
+
+    @Bean
+    Sampler sampler() {
+        return info -> true;
     }
 
     @Autowired
