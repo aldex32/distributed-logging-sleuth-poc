@@ -1,7 +1,9 @@
 #!/bin/bash
 
 echo "Killing containers"
-docker rm -f  $(docker ps -a | grep -E "(service-1|service-2|service-3|service-4|kafka|zookeeper|zipkin|splunk)" | awk '{ print $1 }')
+#docker rm -f  $(docker ps -a | grep -E "(service-1|service-2|service-3)" | awk '{ print $1 }')
+docker-compose down --volumes
+docker volume rm $(docker volume ls -qf dangling=true)
 
 echo "Build project"
 mvn clean install -DskipTests

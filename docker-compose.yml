@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   service-1:
     container_name: service-1
@@ -10,7 +10,7 @@ services:
       - kafka
       - zookeeper
       - zipkin
-      - splunk
+      - universalforwarder
   service-2:
     container_name: service-2
     build:
@@ -21,8 +21,8 @@ services:
       - kafka
       - zookeeper
       - zipkin
-      - splunk
       - service-3
+      - universalforwarder
   service-3:
     container_name: service-3
     build:
@@ -31,7 +31,8 @@ services:
       - "8084:8084"
     links:
       - zipkin
-      - splunk
+      - universalforwarder
+      - universalforwarder
   service-4:
     container_name: service-4
     build:
@@ -40,7 +41,7 @@ services:
       - "8085:8085"
     links:
       - zipkin
-      - splunk
+      - universalforwarder
   zookeeper:
     container_name: zookeeper
     image: confluentinc/cp-zookeeper:3.1.2-2
@@ -49,6 +50,36 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin:1.30.3
+    ports:
+      - "9411:9411"
+  splunk:
+    container_name: splunk
+    image: splunk/splunk
+    ports:
+      - "8000:8000"
+      - "9997:9997"
+      - "8089:8089"
+    environment:
+      SPLUNK_START_ARGS: --accept-license --answer-yes
+      SPLUNK_ENABLE_LISTEN: 9997
+      SPLUNK_USER: root
+#      SPLUNK_CMD_1: add index test
+  universalforwarder:
+    container_name: universalforwarder
+    image: splunk/universalforwarder
+    ports:
+      - "8088:8088"
+    links:
+      - splunk
+    environment:
+      SPLUNK_USER: root
+      SPLUNK_FORWARD_SERVER: splunk:9997
+      SPLUNK_START_ARGS: --accept-license --answer-yes
+      SPLUNK_CMD_1: http-event-collector enable -uri https://localhost:8089
+      SPLUNK_CMD_2: http-event-collector create new-token "test_token" -index test -uri "https://localhost:8089"
   kafka:
     container_name: kafka
     image: confluentinc/cp-kafka:3.1.2-2
@@ -61,18 +92,3 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-  zipkin:
-    container_name: zipkin
-    image: openzipkin/zipkin:1.30.3
-    ports:
-      - "9411:9411"
-  splunk:
-    container_name: splunk
-    image: splunk/splunk:6.6.1
-    ports:
-      - "8000:8000"
-      - "9997:9997"
-    environment:
-      SPLUNK_START_ARGS: --accept-license --answer-yes
-      SPLUNK_ADD: tcp 9997
-      SPLUNK_USER: root

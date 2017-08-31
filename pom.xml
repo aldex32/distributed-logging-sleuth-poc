@@ -15,6 +15,14 @@
     </modules>
     <packaging>pom</packaging>
 
+    <repositories>
+        <repository>
+            <id>splunk</id>
+            <name>splunk-releases</name>
+            <url>http://splunk.artifactoryonline.com/splunk/ext-releases-local</url>
+        </repository>
+    </repositories>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -41,6 +49,14 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-stream-kafka</artifactId>
         </dependency>
+
+
+        <dependency>
+            <groupId>com.splunk.logging</groupId>
+            <artifactId>splunk-library-javalogging</artifactId>
+            <version>1.5.2</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
