@@ -1,16 +1,13 @@
 package com.schubergphilis;
 
-import com.schubergphilis.rest.HelloService;
-import org.apache.cxf.Bus;
-import org.apache.cxf.endpoint.Server;
-import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.schubergphilis.filter.SleuthFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cloud.sleuth.Sampler;
 import org.springframework.context.annotation.Bean;
 
-import java.util.Arrays;
+import javax.servlet.Filter;
 
 @SpringBootApplication
 public class Service4Configuration {
@@ -24,16 +21,16 @@ public class Service4Configuration {
         return info -> true;
     }
 
-    @Autowired
-    private Bus bus;
+    @Bean
+    public FilterRegistrationBean sleuthFilterRegistration() {
+        final FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        filterRegistrationBean.setFilter(getSleuthFilter());
+
+        return filterRegistrationBean;
+    }
 
     @Bean
-    public Server rsServer() {
-        final JAXRSServerFactoryBean serverFactory = new JAXRSServerFactoryBean();
-        serverFactory.setBus(bus);
-        serverFactory.setAddress("/");
-        serverFactory.setServiceBeans(Arrays.asList(new HelloService()));
-
-        return serverFactory.create();
+    public Filter getSleuthFilter() {
+        return new SleuthFilter();
     }
 }
