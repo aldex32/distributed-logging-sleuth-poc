@@ -32,7 +32,6 @@ services:
     links:
       - zipkin
       - universalforwarder
-      - universalforwarder
   service-4:
     container_name: service-4
     build:
@@ -61,7 +60,6 @@ services:
     ports:
       - "8000:8000"
       - "9997:9997"
-      - "8089:8089"
     environment:
       SPLUNK_START_ARGS: --accept-license --answer-yes
       SPLUNK_ENABLE_LISTEN: 9997

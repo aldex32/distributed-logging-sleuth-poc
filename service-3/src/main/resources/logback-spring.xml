@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
-
     <springProperty scope="context" name="springAppName" source="spring.application.name"/>
-    <property name="LOG_FILE" value="${BUILD_FOLDER:-service-3/target/log}/${springAppName}.log"/>​
 
     <property name="LOG_PATTERN"
               value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
@@ -19,6 +17,8 @@
             <charset>utf8</charset>
         </encoder>
     </appender>
+
+    <!--<property name="LOG_FILE" value="${BUILD_FOLDER:-service-3/target/log}/${springAppName}.log"/>​-->
 
     <!-- Appender to log to file -->​
     <!--<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
@@ -36,14 +36,14 @@
     <!-- Appender to log to SPLUNK -->​
     <appender name="SOCKET" class="com.splunk.logging.HttpEventCollectorLogbackAppender">
         <url>https://universalforwarder:8088</url>
-        <token>6E62D0A3-959E-4C0E-91BC-9FF5CFB3B1CF</token>
+        <token>16FCE593-6512-405B-A0F0-0BD5E044F10A</token>
         <batch_size_count>1</batch_size_count>
         <!--<source>http://new-token</source>-->
         <!--<sourcetype>log4j</sourcetype>-->
         <middleware>HttpEventCollectorUnitTestMiddleware</middleware>
         <disableCertificateValidation>true</disableCertificateValidation>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%msg%n</pattern>
+            <pattern>${LOG_PATTERN}</pattern>
         </layout>
     </appender>
 
