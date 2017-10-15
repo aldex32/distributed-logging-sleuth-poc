@@ -9,25 +9,26 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>service-3</artifactId>
-
-    <properties>
-        <cxf.version>3.1.12</cxf.version>
-    </properties>
+    <artifactId>rest-interface</artifactId>
 
     <dependencies>
-        <!-- Apache CXF -->
         <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-spring-boot-starter-jaxrs</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.schubergphilis</groupId>
-            <artifactId>rest-interface</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.1</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

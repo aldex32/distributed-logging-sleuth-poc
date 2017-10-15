@@ -22,6 +22,12 @@
             <artifactId>cxf-spring-boot-starter-jaxrs</artifactId>
             <version>${cxf.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.schubergphilis</groupId>
+            <artifactId>rest-interface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>
