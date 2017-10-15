@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
-
     <springProperty scope="context" name="springAppName" source="spring.application.name"/>
-    <property name="LOG_FILE" value="${BUILD_FOLDER:-service-4/target/log}/${springAppName}.log"/>​
 
     <property name="LOG_PATTERN"
               value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
@@ -20,30 +18,24 @@
         </encoder>
     </appender>
 
-    <!-- Appender to log to file -->​
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_FILE}</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.gz</fileNamePattern>
-            <maxHistory>7</maxHistory>
-        </rollingPolicy>
-        <encoder>
+    <!-- Appender to log to SPLUNK -->​
+    <appender name="SOCKET" class="com.splunk.logging.HttpEventCollectorLogbackAppender">
+        <url>https://universalforwarder:8088</url>
+        <token>16FCE593-6512-405B-A0F0-0BD5E044F10A</token>
+        <batch_size_count>1</batch_size_count> <!-- Don't use the value 1 in PROD -->
+        <middleware>HttpEventCollectorUnitTestMiddleware</middleware>
+        <disableCertificateValidation>true</disableCertificateValidation>
+        <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>${LOG_PATTERN}</pattern>
-            <charset>utf8</charset>
-        </encoder>
+        </layout>
     </appender>
 
-    <!-- Appender to log to SPLUNK -->​
-    <appender name="SOCKET" class="ch.qos.logback.classic.net.SocketAppender">
-        <remoteHost>splunk</remoteHost>
-        <port>9997</port>
-        <reconnectionDelay>10000</reconnectionDelay>
-        <includeCallerData>true</includeCallerData>
-    </appender>
+    <logger name="splunk.logger" level="INFO">
+        <appender-ref ref="SOCKET"/>
+    </logger>
 
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
-        <appender-ref ref="FILE" />
         <appender-ref ref="SOCKET" />
     </root>
 </configuration>
