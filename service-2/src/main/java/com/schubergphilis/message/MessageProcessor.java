@@ -20,7 +20,7 @@ public class MessageProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageProcessor.class);
 
-    @Value("${service3.url:http://localhost:8084}")
+    @Value("${service3.url:http://localhost:8084/hello}")
     private String service3Url;
 
     @Autowired
