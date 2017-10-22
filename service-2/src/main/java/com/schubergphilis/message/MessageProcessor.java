@@ -35,23 +35,24 @@ public class MessageProcessor {
         LOGGER.info("Headers received from topic1: {}", msg.getHeaders());
 
         LOGGER.info("Invoking service-3 asynchronously");
-        final ListenableFuture<ResponseEntity<String>> futureResponse = asyncRestTemplate.getForEntity(service3Url, String.class);
-
-        futureResponse.addCallback(new ListenableFutureCallback<ResponseEntity<String>>() {
-
-            @Override
-            public void onSuccess(ResponseEntity<String> result) {
-                final String body = result.getBody();
-                LOGGER.info("Response from service-3: {}", body);
-
-                sendMessage(body);
-            }
-
-            @Override
-            public void onFailure(Throwable ex) {
-
-            }
-        });
+        sendMessage("test");
+//        final ListenableFuture<ResponseEntity<String>> futureResponse = asyncRestTemplate.getForEntity(service3Url, String.class);
+//
+//        futureResponse.addCallback(new ListenableFutureCallback<ResponseEntity<String>>() {
+//
+//            @Override
+//            public void onSuccess(ResponseEntity<String> result) {
+//                final String body = result.getBody();
+//                LOGGER.info("Response from service-3: {}", body);
+//
+//                sendMessage(body);
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable ex) {
+//
+//            }
+//        });
     }
 
     private void sendMessage(String message) {
