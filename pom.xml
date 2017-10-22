@@ -52,12 +52,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.schubergphilis.midlayer</groupId>
-            <artifactId>sleuth-cxf-feature</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.splunk.logging</groupId>
             <artifactId>splunk-library-javalogging</artifactId>
             <version>1.5.2</version>

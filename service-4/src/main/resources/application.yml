@@ -1,6 +1,10 @@
 spring:
   zipkin:
     base-url: http://zipkin:9411 # Property needed only if it is running in docker
+  sleuth:
+    sampler:
+      percentage: 1.0
+    enabled: true
 
 cxf:
   path: /
